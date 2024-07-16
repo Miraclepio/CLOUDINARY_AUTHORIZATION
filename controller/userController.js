@@ -5,6 +5,7 @@ require("dotenv").config()
 const html=require("../helpers/html.js")
 const jwt= require("jsonwebtoken")
 const cloudinary=require('../cloudinary.js')
+const fs=require('fs')
 
 exports.createUser =async (req,res)=>{
 
@@ -19,12 +20,28 @@ if(checkIfAnEmailExists){
 const bcryptpassword=await bcrypt.genSaltSync(10)
 
 const hashedPassword =await bcrypt.hashSync(passWord,bcryptpassword)
+// console.log(file)
+console.log(req.file)
+console.log(req.file)
 
 const cloudProfile=await cloudinary.uploader.upload(req.file.path,{folder:" users dp"},(err)=>{
+    console.log(req.file)
+    console.log(file)
     if(err){
         return res.status(400).json(err.message)
+        
+    }
+    console.log(file)
+    console.log(req.file)
+})
+await fs.unlink(req.file.path,(err)=>{
+    if (err){
+        console.log('error occured trying to delete a file=>',err)
+    }else{
+        console.log('successfully deleted=>',req.file.path + ' from the folder')
     }
 })
+
 
 const data={firstName,
     lastName,

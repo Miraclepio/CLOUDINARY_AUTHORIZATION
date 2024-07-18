@@ -12,13 +12,13 @@ const token=req.headers.authorization && req.headers.authorization.split(" ")[1]
     if(err){
         return res.status(400).json(" kindly login to perform this action")
     }
-      req.user=tega.firstName
+      req.user=tega.id
     
 
  })
  next()
 
     } catch (error) {
-       res.status(500).json(error.message) 
+     return  res.status(500).json(error.message) 
     }
 }  

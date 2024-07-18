@@ -17,12 +17,12 @@ const token=req.headers.authorization && req.headers.authorization.split(" ")[1]
         return res.status(400).json(" kindly login to perform this action")
     }
    
-    req.user=user.firstName
+    req.user=user.id
 
 
  })
 
-const checkUser= await userModel.findOne({firstName:req.user})
+const checkUser= await userModel.findById(req.user)
 
 console.log(checkUser)
       if(checkUser.isAdmin==false || checkUser.isSuperAdmin ==false){
@@ -56,12 +56,12 @@ const token=req.headers.authorization && req.headers.authorization.split(" ")[1]
         return res.status(400).json(" kindly login to perform this action")
     }
    
-    req.user=user.firstName
+    req.user=user.id
 
 
  })
 
-const checkUser= await userModel.findOne({firstName:req.user})
+const checkUser= await userModel.findById(req.user)
 
 console.log(checkUser)
       if(checkUser.isSuperAdmin==false){

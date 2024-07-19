@@ -17,26 +17,38 @@ const storage = multer.diskStorage({
     
      
         filename: function (req, file, cb) {
-            
-        const token=req.headers
-        console.log(token)
-        const decodedToken = jwt.verify(token,process.env.jwtSecret);
-        const user = decodedToken.firstName;
-        console.log(user)
-            if(!token){
-                console.log('a')
+            // const token=req.headers.authorization.split(" ")[1]
+            const authHeader = req.headers.authorization;
+            let token;
+    
+            if (authHeader) {
+                token = authHeader.split(' ')[1];
+            }     
+        // console.log(user)
+            if(token){
+                // const token=req.headers
+                // console.log(token)
+                const decodedToken = jwt.verify(token,process.env.jwtSecret);
+                const user = decodedToken.firstName;
+              
+                console.log(user)
                 const fileExtension = file.originalname.split('.').pop();
                 console.log('b')
-                cb(null, `${user}'s profile picture updated.${fileExtension}`);
-                console.log('c')
+                cb(null, `${user}'s profile picture updated.${fileExtension}`); 
+                console.log('c') 
 
-            } else {
+               
+
+            } else if(!token) { 
                 const { firstName, lastName } = req.body;
+            // const user={ firstName, lastName }
+              
                 console.log(firstName);   
                 const fileExtension = file.originalname.split('.').pop();
                 const filename = `${firstName} ${lastName}'s profile picture.${fileExtension}`; 
                 req.userName = `${firstName} ${lastName}`; // Store user's name in req for later use
                 cb(null, filename);
+
             } 
         }
     });

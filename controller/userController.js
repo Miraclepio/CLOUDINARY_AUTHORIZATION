@@ -13,11 +13,11 @@ exports.createUser =async (req,res)=>{
     try {
 const{firstName,lastName,email,phoneNumber,passWord}=req.body
 
-const checkIfAnEmailExists= await userModel.findOne({email:email.toLowerCase()})
+// const checkIfAnEmailExists= await userModel.findOne({email:email.toLowerCase()})
 
-if(checkIfAnEmailExists){
-    return res.status(400).json("user with this email already exists") 
-}
+// if(checkIfAnEmailExists){
+//     return res.status(400).json("user with this email already exists") 
+// }
 const bcryptpassword=await bcrypt.genSaltSync(10)
 
 const hashedPassword =await bcrypt.hashSync(passWord,bcryptpassword)
@@ -47,7 +47,7 @@ const cloudProfile=await cloudinary.uploader.upload(req.file.path,{folder:" user
     console.log(req.file)
 })
 
-await fs.unlink(req.file.path,(err)=>{
+await fs.unlink(req.file.path,(err)=>{ 
     if (err){
         console.log('error occured trying to delete a file=>',err)
     }
@@ -344,9 +344,7 @@ try {
 
 
 // 3rd method of updating a profile pic
-
-const {promisify}=require("util")
-
+const { promisify } = require("util");
 
 exports.updatePicture = async (req, res) => {
     try {
@@ -374,7 +372,7 @@ exports.updatePicture = async (req, res) => {
             if (user.profilePicture && user.profilePicture.pictureId) {
                 await cloudinary.uploader.destroy(user.profilePicture.pictureId);
             }
- 
+
             const updatedUser = await userModel.findByIdAndUpdate(
                 userId,
                 {
@@ -386,7 +384,8 @@ exports.updatePicture = async (req, res) => {
                 { new: true }
             );
 
-            return res.status(200).json({ message: "Picture updated", updatedUser });
+            const userName = newUser.firstName || 'User'; // Default to 'User' if name is not available
+            return res.status(200).json({ message: `${userName}'s profile picture has been updated in the media folder`, updatedUser });
         } catch (uploadError) {
             return res.status(400).json({ error: uploadError.message });
         }
